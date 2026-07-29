@@ -105,8 +105,8 @@ Anyone can *view* listings and photos — only the authenticated owner can *add 
 
 ## 📸 Preview
 
-(owner.png)
-(customer.png)
+     (owner.png)
+     (customer.png)
 ---
 
 ## 📬 Contact
