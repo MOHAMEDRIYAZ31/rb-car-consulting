@@ -4,7 +4,7 @@ A lightweight two-site platform for a used-car consulting business — a public 
 
 🔗 **Live demo:** _add your deployed links here_
 - Customer site: `https://rb-cars-customer.web.app/`
-- Owner dashboard: `https://your-owner-site.web.app`
+- Owner dashboard: `https://your-company-site.web.app`
 
 ---
 
@@ -105,7 +105,7 @@ Anyone can *view* listings and photos — only the authenticated owner can *add 
 
 ## 📸 Preview
 
-![Owner Site](owner.png)
+![company Site](owner.png)
 ![customer Site](customer.png) 
 
 ---
