@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>RB Car Consulting — Owner Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#0f1724; --card:#0b1220; --accent:#ff6b00; --muted:#9aa4b2; --glass: rgba(255,255,255,0.04); }
+  *{box-sizing:border-box}
+  html,body{max-width:100%;overflow-x:hidden}
+  body{margin:0;font-family:"Poppins",system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#071026 0%,#0f1724 100%);color:#e6eef6;line-height:1.4}
+  .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 28px;border-bottom:1px solid rgba(255,255,255,0.03)}
+  .brand{display:flex;gap:12px;align-items:center}
+  .brand .logo{width:44px;height:44px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff}
+  .brand h1{margin:0;font-size:1rem}
+  .muted{color:var(--muted)}
+  #logoutBtn{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--muted);padding:8px 14px;border-radius:8px;cursor:pointer}
+  #logoutBtn:hover{color:#fff}
+
+  .wrap{max-width:1000px;margin:30px auto;padding:0 20px}
+
+  /* Login */
+  #loginBox{max-width:380px;margin:80px auto;background:var(--card);padding:28px;border-radius:12px;border:1px solid rgba(255,255,255,0.05)}
+  #loginBox h2{margin-top:0}
+  input,select,textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:inherit;outline:none;margin-bottom:12px;font-family:inherit}
+  label{font-size:0.85rem;color:var(--muted);display:block;margin-bottom:4px}
+  button.primary{background:var(--accent);color:#081018;border:none;padding:10px 16px;border-radius:8px;font-weight:700;cursor:pointer}
+  button.primary:hover{opacity:0.92}
+  button.secondary{background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--muted);padding:10px 16px;border-radius:8px;cursor:pointer}
+  #loginError{color:#ff6b6b;font-size:0.85rem;min-height:18px}
+
+  /* Form card */
+  .panel{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:22px;margin-bottom:26px}
+  .panel h2{margin-top:0;font-size:1.1rem}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:640px){.row2,.row3{grid-template-columns:1fr}}
+
+  #photoPreview{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+  #photoPreview img{width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.08)}
+  #uploadProgress{font-size:0.85rem;color:var(--muted);margin-top:6px}
+
+  /* Existing listings table */
+  .carRow{display:flex;gap:14px;align-items:center;padding:12px;border-bottom:1px solid rgba(255,255,255,0.04)}
+  .carRow img{width:64px;height:64px;object-fit:cover;border-radius:8px;flex-shrink:0}
+  .carRow .info{flex:1}
+  .carRow .info b{font-size:0.98rem}
+  .carRow .actions{display:flex;gap:8px}
+  .carRow .actions button{padding:6px 12px;font-size:0.85rem;border-radius:6px;border:none;cursor:pointer}
+  .btn-edit{background:rgba(255,255,255,0.08);color:#fff}
+  .btn-del{background:#7a1f1f;color:#fff}
+
+  #formMsg{font-size:0.85rem;min-height:18px;margin-top:8px}
+
+  @media (max-width:640px){
+    .topbar{padding:12px 14px}
+    .wrap{padding:0 12px;margin:16px auto}
+    .panel{padding:14px}
+    #loginBox{margin:40px auto;padding:20px;max-width:calc(100% - 24px)}
+    .carRow{flex-wrap:wrap}
+    .carRow .info{min-width:140px}
+    .carRow .actions{width:100%;justify-content:flex-end;margin-top:6px}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">RB</div>
+    <div>
+      <h1>RB Car Consulting</h1>
+      <div class="muted" style="font-size:0.78rem">Owner Dashboard</div>
+    </div>
+  </div>
+  <button id="logoutBtn" style="display:none">Log out</button>
+</header>
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <h2>Owner Login</h2>
+  <label>Email</label>
+  <input id="loginEmail" type="email" placeholder="you@example.com" />
+  <label>Password</label>
+  <input id="loginPass" type="password" placeholder="••••••••" />
+  <div id="loginError"></div>
+  <button class="primary" id="loginBtn" style="width:100%">Log in</button>
+</div>
+
+<!-- DASHBOARD -->
+<div class="wrap" id="dashboard" style="display:none">
+
+  <div class="panel">
+    <h2 id="formTitle">Add a Car</h2>
+    <input type="hidden" id="editingId" />
+
+    <div class="row3">
+      <div><label>Model / Title</label><input id="f_model" placeholder="Mahindra Bolero B6" /></div>
+      <div><label>Year</label><input id="f_year" placeholder="2021" /></div>
+      <div><label>Fuel</label><input id="f_fuel" placeholder="Diesel" /></div>
+    </div>
+    <div class="row3">
+      <div><label>Ownership</label>
+        <select id="f_ownership">
+          <option value="1">1 owner</option>
+          <option value="2">2 owners</option>
+          <option value="3+">3+ owners</option>
+        </select>
+      </div>
+      <div><label>Kms driven</label><input id="f_km" placeholder="41,200 km" /></div>
+      <div><label>Service</label><input id="f_service" placeholder="Recent major service" /></div>
+    </div>
+    <div class="row3">
+      <div><label>Location</label><input id="f_location" placeholder="Kumbakonam" /></div>
+      <div><label>Price (₹)</label><input id="f_price" placeholder="9,10,000" /></div>
+      <div><label>Trim / Model code</label><input id="f_trim" placeholder="W8" /></div>
+    </div>
+    <div><label>Seller phone (for "Call Seller" button)</label><input id="f_phone" placeholder="+919894272717" /></div>
+
+    <label>Photos</label>
+    <input id="f_photos" type="file" accept="image/*" multiple />
+    <div id="photoPreview"></div>
+    <div id="uploadProgress"></div>
+
+    <div style="margin-top:14px;display:flex;gap:10px">
+      <button class="primary" id="saveBtn">Save Car</button>
+      <button class="secondary" id="cancelEditBtn" style="display:none">Cancel Edit</button>
+    </div>
+    <div id="formMsg"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Current Listings</h2>
+    <div id="carList" class="muted">Loading…</div>
+  </div>
+
+</div>
+
+<!-- Firebase SDKs -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    getFirestore, collection, addDoc, updateDoc, deleteDoc, doc,
+    onSnapshot, orderBy, query, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import {
+    getStorage, ref, uploadBytes, getDownloadURL, deleteObject
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+  // ---- PASTE YOUR FIREBASE CONFIG HERE (same as firebase-config.js) ----
+  const firebaseConfig = {
+    apiKey: "AIzaSyDVMCIlGl7JfUmEbca3YS8ZYPfqaZuVcyg",
+    authDomain: "car-dealership-b8ede.firebaseapp.com",
+    projectId: "car-dealership-b8ede",
+    storageBucket: "car-dealership-b8ede.firebasestorage.app",
+    messagingSenderId: "378778720674",
+    appId: "1:378778720674:web:325b4b78ba05ae15cc3afb",
+    measurementId: "G-0KREJSNCXL"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+  const carsCol = collection(db, "cars");
+
+  // ---------- AUTH ----------
+  const loginBox = document.getElementById('loginBox');
+  const dashboard = document.getElementById('dashboard');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  document.getElementById('loginBtn').addEventListener('click', async ()=>{
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    const errBox = document.getElementById('loginError');
+    errBox.textContent = '';
+    try{
+      await signInWithEmailAndPassword(auth, email, pass);
+    }catch(e){
+      errBox.textContent = 'Login failed: ' + e.message;
+    }
+  });
+
+  logoutBtn.addEventListener('click', ()=> signOut(auth));
+
+  onAuthStateChanged(auth, (user)=>{
+    if(user){
+      loginBox.style.display = 'none';
+      dashboard.style.display = 'block';
+      logoutBtn.style.display = 'inline-block';
+      listenToCars();
+    } else {
+      loginBox.style.display = 'block';
+      dashboard.style.display = 'none';
+      logoutBtn.style.display = 'none';
+    }
+  });
+
+  // ---------- PHOTO SELECTION / PREVIEW ----------
+  let selectedFiles = [];
+  let existingPhotoUrls = []; // used when editing, keeps already-uploaded photos
+
+  document.getElementById('f_photos').addEventListener('change', (e)=>{
+    selectedFiles = Array.from(e.target.files);
+    renderPreview();
+  });
+
+  function renderPreview(){
+    const box = document.getElementById('photoPreview');
+    box.innerHTML = '';
+    existingPhotoUrls.forEach(url=>{
+      const img = document.createElement('img');
+      img.src = url;
+      box.appendChild(img);
+    });
+    selectedFiles.forEach(file=>{
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(file);
+      box.appendChild(img);
+    });
+  }
+
+  // ---------- SAVE (ADD or EDIT) ----------
+  document.getElementById('saveBtn').addEventListener('click', async ()=>{
+    const msg = document.getElementById('formMsg');
+    const progress = document.getElementById('uploadProgress');
+    const editingId = document.getElementById('editingId').value;
+
+    const carData = {
+      model: document.getElementById('f_model').value.trim(),
+      year: document.getElementById('f_year').value.trim(),
+      fuel: document.getElementById('f_fuel').value.trim(),
+      ownership: document.getElementById('f_ownership').value,
+      km: document.getElementById('f_km').value.trim(),
+      service: document.getElementById('f_service').value.trim(),
+      location: document.getElementById('f_location').value.trim(),
+      price: document.getElementById('f_price').value.trim(),
+      trim: document.getElementById('f_trim').value.trim(),
+      phone: document.getElementById('f_phone').value.trim(),
+    };
+
+    if(!carData.model || !carData.price){
+      msg.style.color = '#ff6b6b';
+      msg.textContent = 'Model and Price are required.';
+      return;
+    }
+
+    document.getElementById('saveBtn').disabled = true;
+    msg.style.color = 'var(--muted)';
+    msg.textContent = 'Saving…';
+
+    try{
+      // Upload any newly selected photos
+      let uploadedUrls = [];
+      for(let i=0;i<selectedFiles.length;i++){
+        const file = selectedFiles[i];
+        progress.textContent = `Uploading photo ${i+1} of ${selectedFiles.length}…`;
+        const fileRef = ref(storage, `cars/${Date.now()}_${i}_${file.name}`);
+        await uploadBytes(fileRef, file);
+        const url = await getDownloadURL(fileRef);
+        uploadedUrls.push(url);
+      }
+      progress.textContent = '';
+
+      const finalPhotos = [...existingPhotoUrls, ...uploadedUrls];
+      carData.photos = finalPhotos;
+
+      if(editingId){
+        await updateDoc(doc(db, "cars", editingId), carData);
+        msg.style.color = '#7CFF9E';
+        msg.textContent = 'Car updated.';
+      } else {
+        carData.createdAt = serverTimestamp();
+        await addDoc(carsCol, carData);
+        msg.style.color = '#7CFF9E';
+        msg.textContent = 'Car added.';
+      }
+
+      resetForm();
+    }catch(e){
+      msg.style.color = '#ff6b6b';
+      msg.textContent = 'Error: ' + e.message;
+    }finally{
+      document.getElementById('saveBtn').disabled = false;
+    }
+  });
+
+  function resetForm(){
+    document.getElementById('editingId').value = '';
+    document.getElementById('formTitle').textContent = 'Add a Car';
+    document.getElementById('cancelEditBtn').style.display = 'none';
+    ['f_model','f_year','f_fuel','f_km','f_service','f_location','f_price','f_trim','f_phone'].forEach(id=>{
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('f_ownership').value = '1';
+    document.getElementById('f_photos').value = '';
+    selectedFiles = [];
+    existingPhotoUrls = [];
+    renderPreview();
+  }
+
+  document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+  // ---------- LIST + EDIT + DELETE ----------
+  function listenToCars(){
+    const q = query(carsCol, orderBy('createdAt','desc'));
+    onSnapshot(q, (snap)=>{
+      const listBox = document.getElementById('carList');
+      if(snap.empty){
+        listBox.innerHTML = '<div class="muted">No cars listed yet.</div>';
+        return;
+      }
+      listBox.innerHTML = '';
+      snap.forEach(docSnap=>{
+        const car = docSnap.data();
+        const id = docSnap.id;
+        const thumb = (car.photos && car.photos[0]) || '';
+        const row = document.createElement('div');
+        row.className = 'carRow';
+        row.innerHTML = `
+          <img src="${thumb}" alt="${car.model||''}">
+          <div class="info">
+            <b>${car.model||'(untitled)'}</b>
+            <div class="muted" style="font-size:0.85rem">${car.year||''} • ${car.fuel||''} • ₹${car.price||''} • ${car.location||''}</div>
+          </div>
+          <div class="actions">
+            <button class="btn-edit" data-id="${id}">Edit</button>
+            <button class="btn-del" data-id="${id}">Delete</button>
+          </div>
+        `;
+        listBox.appendChild(row);
+
+        row.querySelector('.btn-edit').addEventListener('click', ()=> startEdit(id, car));
+        row.querySelector('.btn-del').addEventListener('click', ()=> deleteCar(id, car));
+      });
+    });
+  }
+
+  function startEdit(id, car){
+    document.getElementById('editingId').value = id;
+    document.getElementById('formTitle').textContent = 'Edit Car';
+    document.getElementById('cancelEditBtn').style.display = 'inline-block';
+    document.getElementById('f_model').value = car.model||'';
+    document.getElementById('f_year').value = car.year||'';
+    document.getElementById('f_fuel').value = car.fuel||'';
+    document.getElementById('f_ownership').value = car.ownership||'1';
+    document.getElementById('f_km').value = car.km||'';
+    document.getElementById('f_service').value = car.service||'';
+    document.getElementById('f_location').value = car.location||'';
+    document.getElementById('f_price').value = car.price||'';
+    document.getElementById('f_trim').value = car.trim||'';
+    document.getElementById('f_phone').value = car.phone||'';
+    existingPhotoUrls = car.photos ? [...car.photos] : [];
+    selectedFiles = [];
+    document.getElementById('f_photos').value = '';
+    renderPreview();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  async function deleteCar(id, car){
+    if(!confirm(`Delete "${car.model}"? This cannot be undone.`)) return;
+    try{
+      // best-effort: remove images from storage too
+      if(car.photos && car.photos.length){
+        for(const url of car.photos){
+          try{
+            const path = decodeURIComponent(url.split('/o/')[1].split('?')[0]);
+            await deleteObject(ref(storage, path));
+          }catch(e){ /* ignore individual image delete failures */ }
+        }
+      }
+      await deleteDoc(doc(db, "cars", id));
+    }catch(e){
+      alert('Delete failed: ' + e.message);
+    }
+  }
+</script>
+</body>
+</html>

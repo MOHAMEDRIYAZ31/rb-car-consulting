@@ -1,0 +1,355 @@
+<!-- Save this as index.html and open in your browser -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RB Car Consulting</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#ff6b00;
+      --muted:#9aa4b2;
+      --glass: rgba(255,255,255,0.04);
+    }
+    *{box-sizing:border-box}
+    html,body{max-width:100%;overflow-x:hidden}
+    body{
+      margin:0;
+      font-family:"Poppins",system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background: linear-gradient(180deg,#071026 0%, #0f1724 100%);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+    }
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;padding:18px 28px;
+      border-bottom:1px solid rgba(255,255,255,0.03);
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      position:sticky;top:0;z-index:20;
+    }
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand .logo{width:48px;height:48px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;box-shadow: 0 6px 18px rgba(255,107,0,0.12);font-size:18px}
+    .brand h1{margin:0;font-size:1.1rem;letter-spacing:0.3px}
+    .nav{display:flex;gap:14px;align-items:center}
+    .nav a{color:var(--muted);text-decoration:none;font-size:0.95rem;padding:8px 12px;border-radius:8px}
+    .nav a:hover{color:white;background:var(--glass)}
+    .cta{background:var(--accent);color:#081018;padding:8px 12px;border-radius:8px;font-weight:600;text-decoration:none;box-shadow:0 8px 24px rgba(255,107,0,0.12)}
+    .hero{max-width:1200px;margin:26px auto;padding:24px;border-radius:12px;background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+    .hero .left{flex:1;min-width:260px}
+    .hero h2{margin:0 0 6px 0;font-size:1.6rem}
+    .hero p{margin:0;color:var(--muted);max-width:720px}
+    .search{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+    .search input, .search select{padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit;outline:none}
+    .search button{padding:10px 14px;border-radius:8px;border:none;background:var(--accent);color:#081018;font-weight:700}
+    .grid{max-width:1200px;margin:20px auto;display:grid;grid-template-columns: repeat(auto-fill,minmax(280px,1fr));gap:18px;padding:20px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s ease, box-shadow .25s ease}
+    .card:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(2,6,23,0.6)}
+    .thumb{position:relative;background:#061022;height:200px;overflow:hidden}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;transition:transform .5s ease}
+    .thumb img:hover{transform:scale(1.05)}
+    .card-body{padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+    .car-title{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .car-title h3{margin:0;font-size:1.05rem}
+    .car-meta{color:var(--muted);font-size:0.9rem}
+    .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;font-size:0.95rem}
+    .specs .k{color:var(--muted);font-size:0.85rem}
+    .specs .v{font-weight:600;text-align:right}
+    .card-footer{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-top:1px solid rgba(255,255,255,0.02)}
+    .price{font-weight:800;font-size:1.05rem;color:#fff}
+    .contact-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:9px 14px;border-radius:8px;color:#e6eef6;text-decoration:none;display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:0.9rem;box-shadow:0 4px 12px rgba(0,0,0,0.25);transition:transform .2s ease, box-shadow .2s ease, background .2s ease}
+    .contact-btn:hover{color:white;background:var(--accent);border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 20px rgba(255,107,0,0.35)}
+    .social-links{display:flex;justify-content:center;gap:14px;margin:14px 0 8px}
+    .social-btn{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#e6eef6;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,0.3);transition:transform .25s ease, box-shadow .25s ease, background .25s ease}
+    .social-btn svg{width:20px;height:20px}
+    .social-btn.instagram:hover{background:radial-gradient(circle at 30% 30%, #fdf497, #fd5949 45%, #d6249f 75%, #285AEB);transform:translateY(-4px) scale(1.08);box-shadow:0 10px 26px rgba(214,36,159,0.45)}
+    .social-btn.youtube:hover{background:#ff0000;transform:translateY(-4px) scale(1.08);box-shadow:0 10px 26px rgba(255,0,0,0.45)}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.75);z-index:60}
+    .modal.open{display:flex}
+    .lightbox{width:90%;max-width:1000px;background:linear-gradient(180deg,#071026,#0b1220);border-radius:12px;padding:14px;position:relative;box-shadow:0 20px 60px rgba(2,6,23,0.6)}
+    .lb-img{height:520px;background:#000;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .lb-img img{max-width:100%;max-height:100%;object-fit:contain}
+    .lb-meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+    .lb-close{position:absolute;right:12px;top:10px;background:transparent;border:none;color:var(--muted);font-size:20px;cursor:pointer}
+    .nav-arrow{background:rgba(255,255,255,0.03);border:none;color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer}
+    .nav-arrow:hover{color:white}
+    @media (max-width:640px){
+      .hero{flex-direction:column;padding:16px;margin:14px auto}
+      .lb-img{height:320px}
+      .topbar{padding:12px 14px;flex-wrap:wrap;gap:8px}
+      .nav{width:100%;justify-content:space-between}
+      .nav a{padding:6px 8px;font-size:0.85rem}
+      .grid{padding:14px;gap:14px;grid-template-columns:1fr}
+      .search{flex-direction:column}
+      .search input,.search select,.search button{width:100%}
+      .hero .right{text-align:left;width:100%}
+    }
+    .muted{color:var(--muted);font-size:0.95rem}
+    #emptyState, #loadingState{max-width:1200px;margin:20px auto;padding:40px;text-align:center;color:var(--muted)}
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">RB</div>
+      <div>
+        <h1 style="font-size:1rem;margin:0">RB Car Consulting</h1>
+        <div class="muted" style="font-size:0.8rem">Trusted car advisory & listings</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="#projects">Cars</a>
+      <a href="#contact">Contact</a>
+      <a href="#projects" class="cta">View Listings</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="left">
+        <h2>Find the right car for you</h2>
+        <p>We list inspected and consultant-approved cars with full specs and seller contact. Browse, compare and contact sellers directly.</p>
+        <div class="search" role="search" aria-label="car search">
+          <input id="q" type="text" placeholder="Search by model or location..." />
+          <select id="filterOwnership">
+            <option value="">All Ownership</option>
+            <option value="1">1 owner</option>
+            <option value="2">2 owners</option>
+            <option value="3+">3+ owners</option>
+          </select>
+          <button id="doSearch">Search</button>
+        </div>
+      </div>
+      <div class="right" style="min-width:200px;text-align:right">
+        <div style="background:linear-gradient(90deg,#061022,#0b1220);padding:14px;border-radius:10px;">
+          <div class="muted">Need consultation?</div>
+          <div style="font-weight:700;margin-top:8px">+91 73393 52147</div>
+          <div style="color:var(--muted);font-size:0.9rem;margin-top:6px">Mon–Sat • 9AM–6PM</div>
+        </div>
+      </div>
+    </section>
+
+    <div id="loadingState">Loading listings…</div>
+    <div id="emptyState" style="display:none">No cars listed right now. Please check back soon.</div>
+
+    <!-- Cards grid: populated dynamically from Firestore -->
+    <section class="grid" id="projects"></section>
+
+    <!-- Lightbox Modal -->
+    <div id="modal" class="modal" aria-hidden="true" role="dialog" aria-label="image viewer">
+      <div class="lightbox" role="document">
+        <button class="lb-close" title="Close" aria-label="Close">&times;</button>
+        <div class="lb-img"><img id="lbImage" src="" alt="car image"></div>
+        <div class="lb-meta">
+          <div id="lbTitle" style="font-weight:700"></div>
+          <div>
+            <button class="nav-arrow" id="prevBtn" aria-label="previous">Prev</button>
+            <button class="nav-arrow" id="nextBtn" aria-label="next">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <section style="max-width:1200px;margin:20px auto;padding:18px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));">
+      <h2 id="contact">Contact Us</h2>
+      <p class="muted">For consultation or to list your car, contact our team:</p>
+      <p style="font-weight:700">RB Car Consulting — +91 73393 52147<a href="mailto:info@velocitycars.example" style="color:var(--accent);text-decoration:none"></a></p>
+    </section>
+  </main>
+
+  <footer style="text-align:center;padding:18px;color:var(--muted);border-top:1px solid rgba(255,255,255,0.02);">
+    <div class="social-links">
+      <a class="social-btn instagram" href="https://instagram.com/yourhandle" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a class="social-btn youtube" href="https://youtube.com/@yourchannel" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.5v-7l6.3 3.5-6.3 3.5Z"/></svg>
+      </a>
+    </div>
+    © 2026 RB Car Consulting — All rights reserved
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVMCIlGl7JfUmEbca3YS8ZYPfqaZuVcyg",
+      authDomain: "car-dealership-b8ede.firebaseapp.com",
+      projectId: "car-dealership-b8ede",
+      storageBucket: "car-dealership-b8ede.firebasestorage.app",
+      messagingSenderId: "378778720674",
+      appId: "1:378778720674:web:325b4b78ba05ae15cc3afb",
+      measurementId: "G-0KREJSNCXL"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const carsCol = collection(db, "cars");
+
+    const grid = document.getElementById('projects');
+    const loadingState = document.getElementById('loadingState');
+    const emptyState = document.getElementById('emptyState');
+
+    let allCars = []; // cached for search/filter
+
+    const q = query(carsCol, orderBy('createdAt','desc'));
+    onSnapshot(q, (snap)=>{
+      loadingState.style.display = 'none';
+      allCars = [];
+      snap.forEach(docSnap=> allCars.push({ id: docSnap.id, ...docSnap.data() }));
+
+      if(allCars.length === 0){
+        emptyState.style.display = 'block';
+        grid.innerHTML = '';
+        return;
+      }
+      emptyState.style.display = 'none';
+      renderCars(allCars);
+    }, (err)=>{
+      loadingState.textContent = 'Could not load listings: ' + err.message;
+    });
+
+    function escapeHtml(str){
+      return (str||'').toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function renderCars(cars){
+      grid.innerHTML = '';
+      cars.forEach(car=>{
+        const photos = car.photos && car.photos.length ? car.photos : ['https://via.placeholder.com/600x400?text=No+Photo'];
+        const article = document.createElement('article');
+        article.className = 'card';
+        article.setAttribute('data-model', car.model || '');
+        article.setAttribute('data-ownership', car.ownership || '');
+        article.setAttribute('data-location', car.location || '');
+
+        article.innerHTML = `
+          <div class="thumb" data-images='${JSON.stringify(photos)}'>
+            <img src="${escapeHtml(photos[0])}" alt="${escapeHtml(car.model)}" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="car-title">
+              <h3>${escapeHtml(car.model)}</h3>
+              <div class="car-meta">${escapeHtml(car.year)} • ${escapeHtml(car.fuel)}</div>
+            </div>
+            <div class="specs">
+              <div class="k">Ownership</div><div class="v">${escapeHtml(car.ownership)}${car.ownership==='1'?' owner':(car.ownership?' owners':'')}</div>
+              <div class="k">Kms driven</div><div class="v">${escapeHtml(car.km)}</div>
+              <div class="k">Service</div><div class="v">${escapeHtml(car.service)}</div>
+              <div class="k">Location</div><div class="v">${escapeHtml(car.location)}</div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div>
+              <div class="price">₹${escapeHtml(car.price)}</div>
+              <div class="muted" style="font-size:0.85rem">Model: ${escapeHtml(car.trim)}</div>
+            </div>
+            <div>
+              <a class="contact-btn" href="tel:${escapeHtml(car.phone || '+919894272717')}">📞 Call Seller</a>
+            </div>
+          </div>
+        `;
+        grid.appendChild(article);
+      });
+      attachThumbListeners();
+    }
+
+    // --------- Lightbox (modal) logic ----------
+    const modal = document.getElementById('modal');
+    const lbImage = document.getElementById('lbImage');
+    const lbTitle = document.getElementById('lbTitle');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const closeBtn = document.querySelector('.lb-close');
+
+    let currentImages = [];
+    let currentIndex = 0;
+    let currentTitle = '';
+
+    function parseImagesAttr(el){
+      const raw = el.getAttribute('data-images');
+      if(!raw) return [];
+      try{ return JSON.parse(raw); }catch(e){ return []; }
+    }
+
+    function openLightbox(images, index, title){
+      currentImages = images || [];
+      currentIndex = index || 0;
+      currentTitle = title || '';
+      if(!currentImages.length) return;
+      lbImage.src = currentImages[currentIndex];
+      lbImage.alt = title;
+      lbTitle.textContent = currentTitle + " (" + (currentIndex+1) + "/" + currentImages.length + ")";
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+    }
+
+    function attachThumbListeners(){
+      document.querySelectorAll('.thumb').forEach(thumb=>{
+        thumb.addEventListener('click', ()=>{
+          const images = parseImagesAttr(thumb);
+          const first = images && images.length ? images[0] : thumb.querySelector('img').src;
+          const title = thumb.closest('.card').querySelector('h3').textContent;
+          openLightbox(images.length? images : [first], 0, title);
+        });
+      });
+    }
+
+    function showIndex(i){
+      if(!currentImages.length) return;
+      currentIndex = (i + currentImages.length) % currentImages.length;
+      lbImage.src = currentImages[currentIndex];
+      lbTitle.textContent = currentTitle + " (" + (currentIndex+1) + "/" + currentImages.length + ")";
+    }
+    prevBtn.addEventListener('click', ()=> showIndex(currentIndex-1));
+    nextBtn.addEventListener('click', ()=> showIndex(currentIndex+1));
+    closeBtn.addEventListener('click', ()=> { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); });
+    modal.addEventListener('click', (e)=>{ if(e.target === modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); } });
+    document.addEventListener('keydown', (e)=>{
+      if(modal.classList.contains('open')){
+        if(e.key === 'ArrowRight') showIndex(currentIndex+1);
+        if(e.key === 'ArrowLeft') showIndex(currentIndex-1);
+        if(e.key === 'Escape') { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+      }
+    });
+
+    // ------------- Search / Filter --------------
+    const searchInput = document.getElementById('q');
+    const filterSelect = document.getElementById('filterOwnership');
+
+    function applyFilter(){
+      const qv = (searchInput.value || '').trim().toLowerCase();
+      const ownership = filterSelect.value;
+      const filtered = allCars.filter(car=>{
+        const model = (car.model||'').toLowerCase();
+        const location = (car.location||'').toLowerCase();
+        const own = car.ownership || '';
+        const matchesQ = !qv || model.includes(qv) || location.includes(qv);
+        const matchesOwn = !ownership || own === ownership;
+        return matchesQ && matchesOwn;
+      });
+      renderCars(filtered);
+    }
+    document.getElementById('doSearch').addEventListener('click', applyFilter);
+    searchInput.addEventListener('keyup', (e)=> { if(e.key === 'Enter') applyFilter(); });
+
+    // Smooth scroll for internal anchors
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', function(e){
+        const href = this.getAttribute('href');
+        if(href && href.startsWith('#')){
+          e.preventDefault();
+          const el = document.querySelector(href);
+          if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+      });
+    });
+  </script>
+</body>
+</html>

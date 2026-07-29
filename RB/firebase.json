@@ -1,0 +1,1 @@
+ { "hosting": [ { "target": "customer", "public": "customer-site", "ignore": ["firebase.json", "**/.*", "**/node_modules/**"] }, { "target": "owner", "public": "owner-site", "ignore": ["firebase.json", "**/.*", "**/node_modules/**"] } ] }
